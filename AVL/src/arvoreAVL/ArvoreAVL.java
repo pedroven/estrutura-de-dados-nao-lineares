@@ -114,22 +114,24 @@ public class ArvoreAVL{
 			raiz =  new Node(valor, null, null, null);
 		}
 		else {
-			if(valor < no.getElemento()) {
+			if(valor < no.getElemento()) { //inserção à esquerda
 				if(no.getFilhoEsquerdo() != null) {
 					insert(no.getFilhoEsquerdo(), valor);
 				}
 				else {
 					Node novo = new Node(valor,no, null, null);
 					no.setFilhoEsquerdo(novo);
+					this.atualizarFator(novo, true); //atualizar os fatores de balanceamento
 				}
 			}
 			else {
-				if(no.getFilhoDireito() != null) {
+				if(no.getFilhoDireito() != null) { //inserção à direita
 					insert(no.getFilhoDireito(), valor);
 				}
 				else {
 					Node novo = new Node(valor,no, null, null);
 					no.setFilhoDireito(novo);
+					this.atualizarFator(novo, true);
 				}
 			}
 		}
@@ -140,12 +142,14 @@ public class ArvoreAVL{
 		//folha
 		if(this.isExternal(no)) {
 			valor = no.getElemento();
+			this.atualizarFator(no, false);
 			if(no.getPai().getFilhoEsquerdo() == no) {
 				no.getPai().setFilhoEsquerdo(null);
 			}
 			else {
 				no.getPai().setFilhoDireito(null);
 			}
+			no.clear();
 		}
 		else {
 			int qtdF = this.children(no).size();
@@ -154,11 +158,13 @@ public class ArvoreAVL{
 				valor = no.getElemento();
 				if(no.getPai().getFilhoDireito() == no) { //eh o filho direito do pai
 					if(no.getFilhoEsquerdo() != null) { //so tem filho na esquerda
+						this.atualizarFator(no, false);
 						no.getPai().setFilhoDireito(no.getFilhoEsquerdo());
 						no.getFilhoEsquerdo().setPai(no.getPai());
 						no.clear();
 					}
 					else { //so tem filho na direita
+						this.atualizarFator(no, false);
 						no.getPai().setFilhoDireito(no.getFilhoDireito());
 						no.getFilhoDireito().setPai(no.getPai());
 						no.clear();
@@ -166,11 +172,13 @@ public class ArvoreAVL{
 				}
 				else {
 					if(no.getFilhoEsquerdo() != null) { //so tem filho na esquerda
+						this.atualizarFator(no, false);
 						no.getPai().setFilhoEsquerdo(no.getFilhoEsquerdo());
 						no.getFilhoEsquerdo().setPai(no.getPai());
 						no.clear();
 					}
 					else { //so tem filho na direita
+						this.atualizarFator(no, false);
 						no.getPai().setFilhoEsquerdo(no.getFilhoDireito());
 						no.getFilhoDireito().setPai(no.getPai());
 						no.clear();
@@ -182,11 +190,12 @@ public class ArvoreAVL{
 				Node aux = no.getFilhoDireito();
 				Node sub = null; //o substituto do nó que sera removido
 				while(aux != null) {
-					sub = aux; //nó mais a esquerda da sub-arvore direita
+					sub = aux; //nó mais a esquerda da sub-arvore direita (sucessor)
 					aux = aux.getFilhoEsquerdo();
 				}
 				no.setElemento(sub.getElemento());
-				this.remove(sub);
+				sub.clear();
+				this.atualizarFator(no, false);
 			}
 		}
 		return valor;
@@ -347,7 +356,7 @@ public class ArvoreAVL{
 		
 	}
 	
-	public void rotacaoDuplaDireita(Node no) {
+	public void rotacaoDuplaDireita(Node no) { //deve ser privado
 		this.rotacaoSimplesEsquerda(no.getFilhoEsquerdo());
 		this.rotacaoSimplesDireita(no);
 	}
@@ -355,6 +364,69 @@ public class ArvoreAVL{
 	public void rotacaoDuplaEsquerda(Node no) {
 		this.rotacaoSimplesDireita(no.getFilhoDireito());
 		this.rotacaoSimplesEsquerda(no);
+	}
+	
+	public void balancearArvore(Node no) { //deve ser privado
+		int fator = no.getFator();
+		
+		if (fator == 2) {
+			if (no.getFilhoEsquerdo() != null && no.getFilhoEsquerdo().getFator() < 0) {
+				this.rotacaoDuplaDireita(no);
+			} else {
+				this.rotacaoSimplesDireita(no);
+			}
+		} else if (fator == -2) {
+			if (no.getFilhoDireito() != null && no.getFilhoDireito().getFator() > 0) {
+				this.rotacaoDuplaEsquerda(no);
+			} else {
+				this.rotacaoSimplesEsquerda(no);
+			}
+		}
+	}
+	
+	public void atualizarFator(Node no, boolean insercao) { //deve ser privado
+		if (insercao) {
+			
+			if (no == null || no.getPai() == null) return; //condição de parada para a raiz
+			
+			if (no.getElemento() > no.getPai().getElemento()) { //verifica se a inserção é a direita
+				no.getPai().setFator(no.getPai().getFator() - 1);
+			} else {
+				no.getPai().setFator(no.getPai().getFator() + 1);
+			}
+			
+			if (no.getPai().getFator() != 0) {
+				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
+					this.balancearArvore(no.getPai());
+				} else {
+					atualizarFator(no.getPai(), true);
+				}
+			}
+			
+		} else {
+			if (no.getElemento() > no.getPai().getElemento()) { //verifica se a remoção é a direita
+				no.getPai().setFator(no.getPai().getFator() + 1);
+			} else {
+				no.getPai().setFator(no.getPai().getFator() - 1);
+			}
+			if (no.getPai().getFator() != 0) {
+				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
+					this.balancearArvore(no.getPai());
+				} else {
+					atualizarFator(no.getPai(), false);
+				}
+			}
+		}
+	}
+	
+	public String mostraFatores() {
+		String str = "";
+		ArrayList<Node> elmts = this.inOrder(this.root(), false);
+		for(Node e : elmts) {
+			str += "("+ e.getElemento() + "):FB="+ e.getFator() + " ";
+		}
+		str += "\n";
+		return str;
 	}
 	
 }

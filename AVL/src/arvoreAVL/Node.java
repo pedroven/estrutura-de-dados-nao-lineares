@@ -4,12 +4,14 @@ public class Node {
 
 	private int elemento;
 	private Node pai, esquerdo, direito;
+	private int fator;
 	
 	public Node(int elemento, Node pai, Node esquerdo, Node direito) {
 		this.setElemento(elemento);
 		this.setPai(pai);
 		this.setFilhoEsquerdo(esquerdo);
 		this.setFilhoDireito(direito);
+		this.setFator(0);
 	}
 
 	public int getElemento() {
@@ -48,6 +50,14 @@ public class Node {
 		this.setPai(null);
 		this.setFilhoEsquerdo(null);
 		this.setFilhoDireito(null);
+	}
+
+	public int getFator() {
+		return fator;
+	}
+
+	public void setFator(int fator) {
+		this.fator = fator;
 	}
 	
 }

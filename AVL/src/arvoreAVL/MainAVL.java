@@ -6,13 +6,14 @@ public class MainAVL {
 
 		ArvoreAVL avl = new ArvoreAVL();
 		
-//		avl.insert(null, 32);
-//		avl.insert(avl.root(), 31);
-//		avl.insert(avl.root(), 35);
-//		avl.insert(avl.root(), 33);
-//		avl.insert(avl.root(), 36);
-//		avl.insert(avl.root(), 38);
-//		avl.rotacaoSimplesEsquerda(avl.root());
+		avl.insert(null, 32);
+		avl.insert(avl.root(), 31);
+		avl.insert(avl.root(), 35);
+		avl.insert(avl.root(), 33);
+		avl.insert(avl.root(), 36);
+		avl.insert(avl.root(), 38);
+		avl.insert(avl.root(), 40);
+		avl.remove(avl.root());
 		
 //		avl.insert(null, 1);
 //		avl.insert(avl.root(), 2);
@@ -54,6 +55,7 @@ public class MainAVL {
 //		avl.insert(avl.root(), 60);
 //		avl.rotacaoDuplaEsquerda(avl.root());
 		
+		//System.out.println(avl.mostraFatores());
 		System.out.println(avl.mostraArvore());
 	}
 
