@@ -331,6 +331,8 @@ public class ArvoreAVL{
 		if (filhoDireito.getPai() == null) {
 			this.raiz = filhoDireito;	
 		}
+		no.setFator((no.getFator()+1) - Math.min(filhoDireito.getFator(), 0));
+		filhoDireito.setFator((filhoDireito.getFator()+1) - Math.min(no.getFator(), 0));
 	}
 	
 	public void rotacaoSimplesDireita(Node no) {
@@ -353,7 +355,10 @@ public class ArvoreAVL{
 		if (filhoEsquerdo.getPai() == null) {
 			this.raiz = filhoEsquerdo;
 		}
-		
+		//FB_B_novo = FB_B + 1 - min(FB_A, 0);
+		no.setFator((no.getFator()+1) - Math.min(filhoEsquerdo.getFator(), 0));
+		//FB_A_novo = FB_A + 1 + max(FB_B_novo, 0);
+		filhoEsquerdo.setFator((filhoEsquerdo.getFator()+1) + Math.max(no.getFator(), 0));
 	}
 	
 	public void rotacaoDuplaDireita(Node no) { //deve ser privado
@@ -368,7 +373,7 @@ public class ArvoreAVL{
 	
 	public void balancearArvore(Node no) { //deve ser privado
 		int fator = no.getFator();
-		
+		 
 		if (fator == 2) {
 			if (no.getFilhoEsquerdo() != null && no.getFilhoEsquerdo().getFator() < 0) {
 				this.rotacaoDuplaDireita(no);
@@ -395,7 +400,7 @@ public class ArvoreAVL{
 				no.getPai().setFator(no.getPai().getFator() + 1);
 			}
 			
-			if (no.getPai().getFator() != 0) {
+			if (no.getPai().getFator() != 0) { //
 				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
 					this.balancearArvore(no.getPai());
 				} else {
@@ -409,7 +414,7 @@ public class ArvoreAVL{
 			} else {
 				no.getPai().setFator(no.getPai().getFator() - 1);
 			}
-			if (no.getPai().getFator() != 0) {
+			if (no.getPai().getFator() == 0) {
 				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
 					this.balancearArvore(no.getPai());
 				} else {
