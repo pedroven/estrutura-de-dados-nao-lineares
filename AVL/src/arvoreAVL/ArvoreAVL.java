@@ -141,6 +141,12 @@ public class ArvoreAVL{
 		int valor = 0;
 		//folha
 		if(this.isExternal(no)) {
+			if(this.isRoot(no)) {
+				valor = no.getElemento();
+				no.clear();
+				this.raiz = null;
+				return valor;
+			}
 			valor = no.getElemento();
 			this.atualizarFator(no, false);
 			if(no.getPai().getFilhoEsquerdo() == no) {
@@ -186,7 +192,7 @@ public class ArvoreAVL{
 				}
 			}
 			else { //2 filhos
-				valor = no.getElemento();
+				valor = no.getElemento(); 
 				Node aux = no.getFilhoDireito();
 				Node sub = null; //o substituto do nó que sera removido
 				while(aux != null) {
@@ -194,8 +200,7 @@ public class ArvoreAVL{
 					aux = aux.getFilhoEsquerdo();
 				}
 				no.setElemento(sub.getElemento());
-				sub.clear();
-				this.atualizarFator(no, false);
+				remove(sub);
 			}
 		}
 		return valor;
@@ -204,6 +209,7 @@ public class ArvoreAVL{
 	public ArrayList<Node> preOrder(Node no, boolean visitado) {
 		if(!visitado) {
 			listaPreOrder = new ArrayList<Node>();
+			if (no == null) return listaInOrder;
 		}
 		listaPreOrder.add(no);
 		if(no.getFilhoEsquerdo() != null) {
@@ -218,6 +224,7 @@ public class ArvoreAVL{
 	public ArrayList<Node> inOrder(Node no, boolean visitado) {
 		if(!visitado) {
 			listaInOrder = new ArrayList<Node>();
+			if (no == null) return listaInOrder;
 		}
 		if(no.getFilhoEsquerdo() != null) {
 			inOrder(no.getFilhoEsquerdo(), true);
@@ -232,6 +239,7 @@ public class ArvoreAVL{
 	public ArrayList<Node> posOrder(Node no, boolean visitado) {
 		if(!visitado) {
 			listaPosOrder = new ArrayList<Node>();
+			if (no == null) return listaInOrder;
 		}
 		if(no.getFilhoEsquerdo() != null) {
 			posOrder(no.getFilhoEsquerdo(), true);
@@ -268,10 +276,10 @@ public class ArvoreAVL{
 		for(int i=0; i<altura+1; i++) {
 			for(int j=0; j<largura; j++) {
 				if(arvore[i][j] == null) {
-					arvoreCompleta += "  ";
+					arvoreCompleta += " ";
 				}
 				else {
-					arvoreCompleta += " "+arvore[i][j];
+					arvoreCompleta += arvore[i][j];
 				}
 				//arvoreCompleta += arvore[i][j];
 			}
@@ -311,9 +319,9 @@ public class ArvoreAVL{
 		return (no.getFilhoDireito() != null)?true:false;
 	}
 	
-	public void rotacaoSimplesEsquerda(Node no) { //vai ficar privado
-		Node filhoDireito = no.getFilhoDireito();
-		Node filhoEsquerdoSub = no.getFilhoDireito().getFilhoEsquerdo();
+	private void rotacaoSimplesEsquerda(Node no) { 
+		Node filhoDireito = no.getFilhoDireito(); // sub arvore direita
+		Node filhoEsquerdoSub = no.getFilhoDireito().getFilhoEsquerdo(); 
 		no.setFilhoDireito(filhoEsquerdoSub);
 		filhoDireito.setFilhoEsquerdo(no);
 		filhoDireito.setPai(no.getPai());
@@ -331,12 +339,12 @@ public class ArvoreAVL{
 		if (filhoDireito.getPai() == null) {
 			this.raiz = filhoDireito;	
 		}
-		no.setFator((no.getFator()+1) - Math.min(filhoDireito.getFator(), 0));
-		filhoDireito.setFator((filhoDireito.getFator()+1) - Math.min(no.getFator(), 0));
+		no.setFator(no.getFator() + 1 - Math.min(filhoDireito.getFator(), 0));
+		filhoDireito.setFator(filhoDireito.getFator() + 1 + Math.max(no.getFator(), 0));
 	}
 	
-	public void rotacaoSimplesDireita(Node no) {
-		Node filhoEsquerdo = no.getFilhoEsquerdo();
+	private void rotacaoSimplesDireita(Node no) {
+		Node filhoEsquerdo = no.getFilhoEsquerdo(); // sub arvore esquerda
 		Node filhoDireitoSub = no.getFilhoEsquerdo().getFilhoDireito();
 		no.setFilhoEsquerdo(filhoDireitoSub);
 		filhoEsquerdo.setFilhoDireito(no);
@@ -344,7 +352,7 @@ public class ArvoreAVL{
 		
 		if (filhoDireitoSub != null) filhoDireitoSub.setPai(no);
 		
-		if (no.getPai() != null && no.getPai().getFilhoDireito() == no) {
+		if (no.getPai() != null && no.getPai().getFilhoDireito() == no) { // condição para desacoplar o no
 			no.getPai().setFilhoDireito(filhoEsquerdo);
 		} else if (no.getPai() != null) {
 			no.getPai().setFilhoEsquerdo(filhoEsquerdo);
@@ -355,26 +363,24 @@ public class ArvoreAVL{
 		if (filhoEsquerdo.getPai() == null) {
 			this.raiz = filhoEsquerdo;
 		}
-		//FB_B_novo = FB_B + 1 - min(FB_A, 0);
-		no.setFator((no.getFator()+1) - Math.min(filhoEsquerdo.getFator(), 0));
-		//FB_A_novo = FB_A + 1 + max(FB_B_novo, 0);
-		filhoEsquerdo.setFator((filhoEsquerdo.getFator()+1) + Math.max(no.getFator(), 0));
+		no.setFator(no.getFator()- 1 - Math.max(filhoEsquerdo.getFator(), 0)); //atualiza o fator
+		filhoEsquerdo.setFator(filhoEsquerdo.getFator() - 1 + Math.min(no.getFator(), 0));
 	}
 	
-	public void rotacaoDuplaDireita(Node no) { //deve ser privado
+	private void rotacaoDuplaDireita(Node no) { 
 		this.rotacaoSimplesEsquerda(no.getFilhoEsquerdo());
 		this.rotacaoSimplesDireita(no);
 	}
 	
-	public void rotacaoDuplaEsquerda(Node no) {
+	private void rotacaoDuplaEsquerda(Node no) {
 		this.rotacaoSimplesDireita(no.getFilhoDireito());
 		this.rotacaoSimplesEsquerda(no);
 	}
 	
-	public void balancearArvore(Node no) { //deve ser privado
+	private void balancearArvore(Node no) { 
 		int fator = no.getFator();
 		 
-		if (fator == 2) {
+		if (fator == 2) { //define o tipo de rotacao
 			if (no.getFilhoEsquerdo() != null && no.getFilhoEsquerdo().getFator() < 0) {
 				this.rotacaoDuplaDireita(no);
 			} else {
@@ -389,7 +395,7 @@ public class ArvoreAVL{
 		}
 	}
 	
-	public void atualizarFator(Node no, boolean insercao) { //deve ser privado
+	private void atualizarFator(Node no, boolean insercao) { 
 		if (insercao) {
 			
 			if (no == null || no.getPai() == null) return; //condição de parada para a raiz
@@ -409,11 +415,15 @@ public class ArvoreAVL{
 			}
 			
 		} else {
-			if (no.getElemento() > no.getPai().getElemento()) { //verifica se a remoção é a direita
-				no.getPai().setFator(no.getPai().getFator() + 1);
+			
+			if (no == null || no.getPai() == null) return;
+			
+			if (no.getElemento() >= no.getPai().getElemento()) { //verifica se a remoção é a direita
+				no.getPai().setFator(no.getPai().getFator() + 1); //atualiza o fator em função da operação
 			} else {
 				no.getPai().setFator(no.getPai().getFator() - 1);
 			}
+			
 			if (no.getPai().getFator() == 0) {
 				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
 					this.balancearArvore(no.getPai());

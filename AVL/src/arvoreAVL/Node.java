@@ -47,6 +47,7 @@ public class Node {
 	}
 
 	public void clear() {
+		//this.setElemento(null);
 		this.setPai(null);
 		this.setFilhoEsquerdo(null);
 		this.setFilhoDireito(null);

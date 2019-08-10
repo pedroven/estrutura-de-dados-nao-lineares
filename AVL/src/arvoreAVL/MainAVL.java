@@ -6,21 +6,29 @@ public class MainAVL {
 
 		ArvoreAVL avl = new ArvoreAVL();
 		
-//		avl.insert(null, 32);
-//		avl.insert(avl.root(), 31);
-//		avl.insert(avl.root(), 35);
-//		avl.insert(avl.root(), 33);
-//		avl.insert(avl.root(), 36);
-//		avl.insert(avl.root(), 38);
-//		avl.insert(avl.root(), 40);
-//		avl.insert(avl.root(), 70);
-//		avl.insert(avl.root(), 80);
+//		avl.insert(null, 50);
+//		avl.remove(avl.root());
+//		avl.insert(avl.root(), 17);
+//		avl.insert(avl.root(), 72);
+//		avl.insert(avl.root(), 9);
+//		avl.insert(avl.root(), 14);
+//		avl.insert(avl.root(), 12);
+//		avl.insert(avl.root(), 76);
+//		avl.insert(avl.root(), 23);
+//		avl.insert(avl.root(), 19);
+//		avl.insert(avl.root(), 54);
+//		avl.insert(avl.root(), 72);
+//		avl.insert(avl.root(), 67);
 //		System.out.println(avl.root().getFilhoDireito().getElemento());
 //		//avl.remove(avl.root());
 		
-		avl.insert(null, 10);
-		avl.insert(avl.root(), 20);
-		avl.insert(avl.root(), 30);
+		avl.insert(null, 1);
+		avl.insert(avl.root(), 2);
+		avl.insert(avl.root(), 3);
+		avl.insert(avl.root(), 4);
+		avl.insert(avl.root(), 5);
+		avl.remove(avl.root());
+		avl.remove(avl.search(4, avl.root()));
 		
 //		avl.insert(null, 1);
 //		avl.insert(avl.root(), 2);
