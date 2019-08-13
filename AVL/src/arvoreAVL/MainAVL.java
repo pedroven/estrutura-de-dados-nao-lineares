@@ -27,7 +27,11 @@ public class MainAVL {
 		avl.insert(avl.root(), 3);
 		avl.insert(avl.root(), 4);
 		avl.insert(avl.root(), 5);
-		avl.remove(avl.root());
+		avl.insert(avl.root(), 6);
+		avl.insert(avl.root(), 7);
+		avl.insert(avl.root(), 8);
+		avl.insert(avl.root(), 9);
+		//avl.remove(avl.root());
 		avl.remove(avl.search(4, avl.root()));
 		
 //		avl.insert(null, 1);
