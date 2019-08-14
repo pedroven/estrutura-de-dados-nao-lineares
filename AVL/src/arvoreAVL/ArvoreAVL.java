@@ -416,9 +416,13 @@ public class ArvoreAVL{
 			
 		} else {
 			
-			if (no == null || no.getPai() == null) return;
+			if (no == null) return;
 			
-			if (no.getElemento() >= no.getPai().getElemento()) { //verifica se a remoção é a direita
+			if (no.getPai() == null) {
+				return;
+			}
+			
+			if (no.getElemento() > no.getPai().getElemento()) { //verifica se a remoção é a direita
 				no.getPai().setFator(no.getPai().getFator() + 1); //atualiza o fator em função da operação
 			} else {
 				no.getPai().setFator(no.getPai().getFator() - 1);
@@ -427,8 +431,9 @@ public class ArvoreAVL{
 			if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
 				this.balancearArvore(no.getPai());
 			} else {
-				if (no.getPai().getFator() != 0)
-				atualizarFator(no.getPai(), false);
+				if (no.getPai().getFator() == 0) {
+					atualizarFator(no.getPai(), false);
+				}
 			}
 			
 		}

@@ -33,7 +33,19 @@ public class MainAVL {
 		avl.insert(avl.root(), 9);
 		//avl.remove(avl.root());
 		avl.remove(avl.search(4, avl.root()));
-		
+		avl.remove(avl.search(6, avl.root()));
+		//System.out.println(avl.search(6, avl.root()).getPai().getElemento());
+		avl.insert(avl.root(), 0);
+		avl.remove(avl.search(7, avl.root()));
+		avl.insert(avl.root(), 4);
+		avl.remove(avl.search(9, avl.root()));
+		avl.remove(avl.search(0, avl.root()));
+		avl.remove(avl.search(1, avl.root()));
+		avl.remove(avl.root());
+		avl.remove(avl.search(2, avl.root()));
+		avl.insert(avl.root(), 6);
+		System.out.println(avl.mostraArvore());
+		avl.remove(avl.search(4, avl.root()));
 //		avl.insert(null, 1);
 //		avl.insert(avl.root(), 2);
 //		avl.insert(avl.root(), 3);
