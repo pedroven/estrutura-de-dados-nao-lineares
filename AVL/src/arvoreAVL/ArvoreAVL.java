@@ -270,13 +270,13 @@ public class ArvoreAVL{
 		for(int i=0; i<largura; i++) {
 			no = nos.get(i);
 			l = this.depth(no);
-			arvore[l][i] = String.valueOf(no.getElemento());
+			arvore[l][i] = String.valueOf(no.getElemento())+"["+String.valueOf(no.getFator())+"]\t";
 		}
 		
 		for(int i=0; i<altura+1; i++) {
 			for(int j=0; j<largura; j++) {
 				if(arvore[i][j] == null) {
-					arvoreCompleta += " ";
+					arvoreCompleta += "\t";
 				}
 				else {
 					arvoreCompleta += arvore[i][j];
@@ -416,21 +416,26 @@ public class ArvoreAVL{
 			
 		} else {
 			
-			if (no == null || no.getPai() == null) return;
+			if (no == null) return;
 			
-			if (no.getElemento() >= no.getPai().getElemento()) { //verifica se a remoção é a direita
+			if (no.getPai() == null) {
+				return;
+			}
+			
+			if (no.getElemento() > no.getPai().getElemento()) { //verifica se a remoção é a direita
 				no.getPai().setFator(no.getPai().getFator() + 1); //atualiza o fator em função da operação
 			} else {
 				no.getPai().setFator(no.getPai().getFator() - 1);
 			}
 			
-			if (no.getPai().getFator() == 0) {
-				if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
-					this.balancearArvore(no.getPai());
-				} else {
+			if (no.getPai().getFator() < -1 || no.getPai().getFator() > 1) {
+				this.balancearArvore(no.getPai());
+			} else {
+				if (no.getPai().getFator() == 0) {
 					atualizarFator(no.getPai(), false);
 				}
 			}
+			
 		}
 	}
 	
