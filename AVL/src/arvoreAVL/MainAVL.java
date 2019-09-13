@@ -22,13 +22,13 @@ public class MainAVL {
 //		System.out.println(avl.root().getFilhoDireito().getElemento());
 //		//avl.remove(avl.root());
 		
-		avl.insert(null, 1);
-		avl.insert(avl.root(), 2);
-		avl.insert(avl.root(), 3);
-		avl.insert(avl.root(), 4);
-		avl.insert(avl.root(), 5);
-		avl.remove(avl.root());
-		avl.remove(avl.search(4, avl.root()));
+		avl.insert(null, 10);
+		avl.insert(avl.root(), 20);
+		avl.insert(avl.root(), 30);
+		//avl.insert(avl.root(), 4);
+		//avl.insert(avl.root(), 5);
+		//avl.remove(avl.root());
+		//avl.remove(avl.search(4, avl.root()));
 		
 //		avl.insert(null, 1);
 //		avl.insert(avl.root(), 2);
@@ -70,7 +70,7 @@ public class MainAVL {
 //		avl.insert(avl.root(), 60);
 //		avl.rotacaoDuplaEsquerda(avl.root());
 		System.out.println(avl.mostraArvore());
-		System.out.println(avl.mostraFatores());
+		//System.out.println(avl.mostraFatores());
 	}
 
 }
