@@ -122,7 +122,7 @@ public class ArvoreRN{
 				else {
 					NoRN novo = new NoRN(valor,no, null, null);
 					no.setFilhoEsquerdo(novo);
-					this.atualizaCor(novo, true);
+					this.atualizaCor(novo, null, true);
 				}
 			}
 			else {
@@ -132,7 +132,7 @@ public class ArvoreRN{
 				else {
 					NoRN novo = new NoRN(valor,no, null, null);
 					no.setFilhoDireito(novo);
-					this.atualizaCor(novo, true);
+					this.atualizaCor(novo, null, true);
 				}
 			}
 		}
@@ -149,14 +149,7 @@ public class ArvoreRN{
 				return valor;
 			}
 			valor = no.getElemento();
-			this.atualizaCor(no, false);
-			if(no.getPai().getFilhoEsquerdo() == no) {
-				no.getPai().setFilhoEsquerdo(null);
-			}
-			else {
-				no.getPai().setFilhoDireito(null);
-			}
-			no.clear();
+			this.atualizaCor(no, null, false);
 		}
 		else {
 			int qtdF = this.children(no).size();
@@ -165,30 +158,30 @@ public class ArvoreRN{
 				valor = no.getElemento();
 				if(no.getPai().getFilhoDireito() == no) { //eh o filho direito do pai
 					if(no.getFilhoEsquerdo() != null) { //so tem filho na esquerda
-						this.atualizaCor(no, false);
-						no.getPai().setFilhoDireito(no.getFilhoEsquerdo());
-						no.getFilhoEsquerdo().setPai(no.getPai());
-						no.clear();
+						this.atualizaCor(no, no.getFilhoEsquerdo(), false);
+						// no.getPai().setFilhoDireito(no.getFilhoEsquerdo());
+						// no.getFilhoEsquerdo().setPai(no.getPai());
+						// no.clear();
 					}
 					else { //so tem filho na direita
-						this.atualizaCor(no, false);
-						no.getPai().setFilhoDireito(no.getFilhoDireito());
-						no.getFilhoDireito().setPai(no.getPai());
-						no.clear();
+						this.atualizaCor(no, no.getFilhoDireito(), false);
+						//no.getPai().setFilhoDireito(no.getFilhoDireito());
+						//no.getFilhoDireito().setPai(no.getPai());
+						//no.clear();
 					}
 				}
 				else {
 					if(no.getFilhoEsquerdo() != null) { //so tem filho na esquerda
-						this.atualizaCor(no, false);
-						no.getPai().setFilhoEsquerdo(no.getFilhoEsquerdo());
-						no.getFilhoEsquerdo().setPai(no.getPai());
-						no.clear();
+						this.atualizaCor(no, no.getFilhoEsquerdo(), false);
+						//no.getPai().setFilhoEsquerdo(no.getFilhoEsquerdo());
+						//no.getFilhoEsquerdo().setPai(no.getPai());
+						//no.clear();
 					}
 					else { //so tem filho na direita
-						this.atualizaCor(no, false);
-						no.getPai().setFilhoEsquerdo(no.getFilhoDireito());
-						no.getFilhoDireito().setPai(no.getPai());
-						no.clear();
+						this.atualizaCor(no, no.getFilhoDireito(), false);
+						//no.getPai().setFilhoEsquerdo(no.getFilhoDireito());
+						//no.getFilhoDireito().setPai(no.getPai());
+						//no.clear();
 					}
 				}
 			}
@@ -201,6 +194,7 @@ public class ArvoreRN{
 					aux = aux.getFilhoEsquerdo();
 				}
 				no.setElemento(sub.getElemento());
+				//talvez chamar o atualizador aqui
 				remove(sub);
 			}
 		}
@@ -383,7 +377,7 @@ public class ArvoreRN{
 		return false;
 	}
 	
-	private void atualizaCor(NoRN no, boolean insercao) { 
+	private void atualizaCor(NoRN no, NoRN sucessor, boolean insercao) { 
 		if (insercao) {
 
 			if (no == null) return;
@@ -398,7 +392,7 @@ public class ArvoreRN{
 				no.getTio().setCor('N');
 				if(no.getAvo() != raiz)
 				no.getAvo().setCor('R');
-				this.atualizaCor(no.getAvo(), true);
+				this.atualizaCor(no.getAvo(), null, true);
 
             } else if (no.getPai().getCor() == 'R' && (no.getTio() == null || no.getTio().getCor() == 'N')) {
 				if (this.isZigzag(no)) {
@@ -418,12 +412,162 @@ public class ArvoreRN{
 						this.rotacaoSimplesDireita(no.getAvo());
 					}
 				}
-				this.atualizaCor(no.getAvo(), true);
+				this.atualizaCor(no.getAvo(), null, true);
 			}
 			return;			
 			
 		} else {
-			//TODO
+			if (this.isExternal(no)) {
+				if (no.getCor() == 'R') {
+					if (no.getPai().getFilhoEsquerdo() == no) {
+						no.getPai().setFilhoEsquerdo(null);
+					} else {
+						no.getPai().setFilhoDireito(null);
+					}
+					no.clear();
+				} else {
+					no.setCor('D');
+					this.escolheCaso(no);
+				}
+			} else {
+				if (no.getCor() == 'N' && sucessor.getCor() == 'R') {
+					no.setElemento(sucessor.getElemento());
+					if (no.getFilhoEsquerdo() == sucessor) {
+						no.setFilhoEsquerdo(null);
+						sucessor.clear();
+					} else {
+						no.setFilhoDireito(null);
+						sucessor.clear();
+					}
+				}
+			}
+		}
+	}
+
+	private void escolheCaso(NoRN no) {
+		
+		if(no == null) return;
+		
+		if (no.getCor() != 'D') return; 
+		
+		if (this.isRoot(no)) {
+			this.caso1(no);
+			return;
+		}
+
+		NoRN irmao = null;
+		NoRN sobrinhoEsq = null;
+		NoRN sobrinhoDir = null;
+		if (no.getPai().getFilhoDireito() == no) {
+			irmao = no.getPai().getFilhoEsquerdo();
+			if (irmao != null) {
+				sobrinhoEsq = irmao.getFilhoEsquerdo();
+				sobrinhoDir = irmao.getFilhoDireito();
+			}
+		} else {
+			irmao = no.getPai().getFilhoDireito();
+			if (irmao != null) {
+				sobrinhoEsq = irmao.getFilhoEsquerdo();
+				sobrinhoDir = irmao.getFilhoDireito();
+			}
+		}
+
+		if (no.getPai().getCor() == 'N' 
+		&& (irmao == null || irmao.getCor() == 'R') 
+		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'N')) 
+		&& (irmao == null || (sobrinhoEsq == null || sobrinhoEsq.getCor() == 'N'))) {
+			NoRN pai = no.getPai();
+			this.caso2(no, pai, irmao);
+			escolheCaso(no);
+
+		} else if (no.getPai().getCor() == 'N' 
+		&& (irmao == null || irmao.getCor() == 'N') 
+		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'N')) 
+		&& (irmao == null || (sobrinhoEsq == null || sobrinhoEsq.getCor() == 'N'))) {
+			NoRN pai = no.getPai();
+			this.caso3(no, pai, irmao);
+			escolheCaso(pai);
+
+		} else if (no.getPai().getCor() == 'R' 
+		&& (irmao == null || irmao.getCor() == 'N') 
+		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'N')) 
+		&& (irmao == null || (sobrinhoEsq == null || sobrinhoEsq.getCor() == 'N'))) {
+			this.caso4(no, irmao);
+
+		} else if (no.getPai().getCor() == 'N' 
+		&& (irmao == null || irmao.getCor() == 'N') 
+		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'N')) 
+		&& (irmao == null || (sobrinhoEsq.getCor() == 'R'))) {
+			this.caso5(no, irmao, sobrinhoEsq, sobrinhoDir);
+			escolheCaso(no);
+
+		} else if ((no.getPai().getCor() == 'R' || no.getPai().getCor() == 'N') 
+		&& (irmao == null || irmao.getCor() == 'N') 
+		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'R')) 
+		&& (irmao == null || (sobrinhoEsq == null || (sobrinhoEsq.getCor() == 'N' || sobrinhoEsq.getCor() == 'R')))) {
+			NoRN pai = no.getPai();
+			this.caso6(no, pai, sobrinhoDir);
+		}
+	}
+
+	private void caso1(NoRN no) {
+		no.setCor('N');
+	}
+
+	private void caso2(NoRN no, NoRN pai, NoRN irmao) {
+		if (pai.getFilhoEsquerdo() == no) {
+			this.rotacaoSimplesEsquerda(pai);
+			pai.setCor('R');
+			irmao.setCor('N');
+		} else {
+			this.rotacaoSimplesDireita(pai);
+			pai.setCor('R');
+			irmao.setCor('N');
+		}
+	}
+
+	private void caso3(NoRN no, NoRN pai, NoRN irmao) {
+		pai.setCor('D');
+		no.setCor('N');
+		irmao.setCor('R');
+	}
+
+	private void caso4(NoRN no, NoRN irmao) {
+		no.getPai().setCor('N');
+		if (irmao != null) irmao.setCor('R');
+		if (no.getPai().getFilhoEsquerdo() == no){
+			no.getPai().setFilhoEsquerdo(null);
+		} else {
+			no.getPai().setFilhoDireito(null);
+		}
+		no.clear();
+	}
+
+	private void caso5(NoRN no, NoRN irmao, NoRN sobrEsq, NoRN sobrDir) {
+		if (irmao != null) {
+			if(no.getPai().getFilhoEsquerdo() == no){
+				this.rotacaoSimplesDireita(irmao);
+				irmao.setCor('R');
+				sobrEsq.setCor('N');
+			} else {
+				this.rotacaoSimplesEsquerda(irmao);
+				irmao.setCor('R');
+				if (sobrDir != null) sobrDir.setCor('N');
+			}
+		}
+	}
+
+	private void caso6(NoRN no, NoRN pai, NoRN sobrDir) {
+		if (pai.getFilhoEsquerdo() == no) {
+			no.setCor('N');
+			pai.setFilhoEsquerdo(null);
+			this.rotacaoSimplesEsquerda(pai);
+			no.clear();
+		} else {
+			no.setCor('N');
+			pai.setFilhoDireito(null);
+			this.rotacaoSimplesDireita(pai);
+			no.clear();
 		}
 	}
 	
