@@ -428,6 +428,12 @@ public class ArvoreRN{
 				} else {
 					no.setCor('D');
 					this.escolheCaso(no);
+					if (no.getPai().getFilhoEsquerdo() == no) {
+						no.getPai().setFilhoEsquerdo(null);
+					} else {
+						no.getPai().setFilhoDireito(null);
+					}
+					no.clear();
 				}
 			} else {
 				if (no.getCor() == 'N' && sucessor.getCor() == 'R') {
@@ -506,7 +512,7 @@ public class ArvoreRN{
 		&& (irmao == null || (sobrinhoDir == null || sobrinhoDir.getCor() == 'R')) 
 		&& (irmao == null || (sobrinhoEsq == null || (sobrinhoEsq.getCor() == 'N' || sobrinhoEsq.getCor() == 'R')))) {
 			NoRN pai = no.getPai();
-			this.caso6(no, pai, sobrinhoDir);
+			this.caso6(no, pai, sobrinhoDir, sobrinhoEsq);
 		}
 	}
 
@@ -530,17 +536,25 @@ public class ArvoreRN{
 		pai.setCor('D');
 		no.setCor('N');
 		irmao.setCor('R');
+		// if(this.isRoot(pai)) {
+		// 	if (pai.getFilhoDireito() == no) {
+		// 		pai.setFilhoDireito(null);
+		// 	} else {
+		// 		pai.setFilhoEsquerdo(null);
+		// 	} 
+		// 	no.clear();
+		// }
 	}
 
 	private void caso4(NoRN no, NoRN irmao) {
 		no.getPai().setCor('N');
 		if (irmao != null) irmao.setCor('R');
 		if (no.getPai().getFilhoEsquerdo() == no){
-			no.getPai().setFilhoEsquerdo(null);
+			//no.getPai().setFilhoEsquerdo(null);
 		} else {
-			no.getPai().setFilhoDireito(null);
+			//no.getPai().setFilhoDireito(null);
 		}
-		no.clear();
+		//no.clear();
 	}
 
 	private void caso5(NoRN no, NoRN irmao, NoRN sobrEsq, NoRN sobrDir) {
@@ -557,17 +571,19 @@ public class ArvoreRN{
 		}
 	}
 
-	private void caso6(NoRN no, NoRN pai, NoRN sobrDir) {
+	private void caso6(NoRN no, NoRN pai, NoRN sobrDir, NoRN sobrEsq) {
 		if (pai.getFilhoEsquerdo() == no) {
 			no.setCor('N');
-			pai.setFilhoEsquerdo(null);
+			//pai.setFilhoEsquerdo(null);
 			this.rotacaoSimplesEsquerda(pai);
-			no.clear();
+			if(sobrDir != null) sobrDir.setCor('N');
+			//no.clear();
 		} else {
 			no.setCor('N');
-			pai.setFilhoDireito(null);
+			//pai.setFilhoDireito(null);
 			this.rotacaoSimplesDireita(pai);
-			no.clear();
+			if (sobrEsq != null) sobrEsq.setCor('N');
+			//no.clear();
 		}
 	}
 	

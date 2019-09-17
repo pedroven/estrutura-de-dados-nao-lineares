@@ -6,15 +6,36 @@ public class MainArvoreRN {
         ArvoreRN arn = new ArvoreRN();
 
         /// teste 1 ///
-        // arn.insert(null, 1);
-        // arn.insert(arn.root(), 2);
-        // arn.insert(arn.root(), 3);
-        // arn.insert(arn.root(), 4);
-        // arn.insert(arn.root(), 5);
-        // arn.insert(arn.root(), 6);
-        // //arn.insert(arn.root(), 7);
-        // //arn.insert(arn.root(), 8);
+        arn.insert(null, 1);
+        arn.insert(arn.root(), 2);
+        arn.insert(arn.root(), 3);
+        arn.insert(arn.root(), 4);
+        arn.insert(arn.root(), 5);
+        arn.insert(arn.root(), 6);
+        arn.insert(arn.root(), 7);
+        arn.insert(arn.root(), 8);
+        arn.insert(arn.root(), 9);
+        arn.insert(arn.root(), 10);
+        arn.remove(arn.search(10, arn.root()));
+        arn.remove(arn.search(9, arn.root()));
+        System.out.println(arn.mostraArvore());
+        arn.remove(arn.search(7, arn.root()));
+        arn.remove(arn.search(5, arn.root()));
+        System.out.println(arn.mostraArvore());
+        arn.remove(arn.search(1, arn.root()));
+        System.out.println(arn.mostraArvore());
+        arn.remove(arn.search(2, arn.root()));
+        System.out.println(arn.mostraArvore());
+        arn.remove(arn.search(3, arn.root()));
+        //System.out.println(arn.mostraArvore());
+        // arn.remove(arn.search(1, arn.root()));
+        // arn.remove(arn.search(2, arn.root()));
+        // arn.remove(arn.search(3, arn.root()));
+        // System.out.println(arn.mostraArvore());
         // arn.remove(arn.search(4, arn.root()));
+        // System.out.println(arn.mostraArvore());
+        // arn.remove(arn.search(5, arn.root()));
+        // arn.remove(arn.search(6, arn.root()));
         // arn.insert(arn.root(), 9);
 
         /// teste 2 ///
@@ -115,12 +136,12 @@ public class MainArvoreRN {
         // arn.remove(arn.search(10, arn.root()));
 
         /// teste 10 ///
-        arn.insert(null, 10);
-        arn.insert(arn.root(), 20);
-        arn.insert(arn.root(), 30);
-        arn.insert(arn.root(), 25);
-        arn.insert(arn.root(), 26);
-        arn.insert(arn.root(), 27);
+        // arn.insert(null, 10);
+        // arn.insert(arn.root(), 20);
+        // arn.insert(arn.root(), 30);
+        // arn.insert(arn.root(), 25);
+        // arn.insert(arn.root(), 26);
+        // arn.insert(arn.root(), 27);
         //arn.insert(arn.root(), 5);
         //arn.insert(arn.root(), 6);
         //arn.insert(arn.root(), 7);
