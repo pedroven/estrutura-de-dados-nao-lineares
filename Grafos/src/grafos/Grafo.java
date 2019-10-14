@@ -28,8 +28,25 @@ public class Grafo implements GrafoInterface {
     @Override
     public boolean ehAdjacente(Vertice vertice1, Vertice vertice2) {
         boolean ehAdj = false;
-        if(this.matrizAdj[vertice1.getChave()-1][vertice2.getChave()-1] != null) ehAdj = true;
+        for (Aresta a : this.arestas) {
+            if((a.getFim() == vertice1 && a.getInicio() == vertice2) || 
+            (a.getFim() == vertice2 && a.getInicio() == vertice1 )) {
+                ehAdj = true;
+                break;
+            }
+        }
         return ehAdj;
+    }
+
+    private ArrayList<Aresta> arestasLigadas(Vertice vertice1, Vertice vertice2) {
+        ArrayList<Aresta> arestas = new ArrayList<Aresta>();
+        for (Aresta a : this.arestas) {
+            if((a.getFim() == vertice1 && a.getInicio() == vertice2) || 
+            (a.getFim() == vertice2 && a.getInicio() == vertice1 )) {
+                arestas.add(a);
+            }
+        }
+        return arestas;
     }
 
     @Override
@@ -75,15 +92,16 @@ public class Grafo implements GrafoInterface {
     public Aresta inserirAresta(Vertice inicio, Vertice fim, Object custo) {
         Aresta novo = new Aresta(inicio, fim, false, custo);
         this.arestas.add(novo);
-        ArrayList<Aresta> arestasMtr1 = (ArrayList<Aresta>) this.matrizAdj[inicio.getChave()-1][fim.getChave()-1];
-        ArrayList<Aresta> arestasMtr2 = (ArrayList<Aresta>) this.matrizAdj[fim.getChave()-1][inicio.getChave()-1];
+        this.vertices.indexOf(inicio);
+        ArrayList<Aresta> arestasMtr1 = (ArrayList<Aresta>) this.matrizAdj[this.vertices.indexOf(inicio)][this.vertices.indexOf(fim)];
+        ArrayList<Aresta> arestasMtr2 = (ArrayList<Aresta>) this.matrizAdj[this.vertices.indexOf(fim)][this.vertices.indexOf(inicio)];
         if (arestasMtr1 == null) {
             arestasMtr1 = new ArrayList<Aresta>();
             arestasMtr2 = new ArrayList<Aresta>();
             arestasMtr1.add(novo);
             arestasMtr2.add(novo);
-            this.matrizAdj[inicio.getChave()-1][fim.getChave()-1] = arestasMtr1;
-            this.matrizAdj[fim.getChave()-1][inicio.getChave()-1] = arestasMtr2;
+            this.matrizAdj[this.vertices.indexOf(inicio)][this.vertices.indexOf(fim)] = arestasMtr1;
+            this.matrizAdj[this.vertices.indexOf(fim)][this.vertices.indexOf(inicio)] = arestasMtr2;
         } else {
             arestasMtr1.add(novo);
             arestasMtr2.add(novo);
@@ -107,7 +125,6 @@ public class Grafo implements GrafoInterface {
             this.matrizAdj = new Object[tam][tam];
         }
         Vertice novo = new Vertice(elemento);
-        novo.setChave(this.ordem+1);
         this.vertices.add(novo);
         this.ordem++;
         return novo;
@@ -147,23 +164,29 @@ public class Grafo implements GrafoInterface {
     @Override
     public Object removeVertice(Vertice vertice) {
         Object elemento = vertice.getElemento();
-        for (Vertice v : this.vertices) {
-            if (v == vertice) {
-                ArrayList<Aresta> a_incidentes = this.arestasIncidentes(vertice);
-                for (Aresta a : a_incidentes) {
-                    this.arestas.remove(a);
-                    a.setCusto(null);
-                    a.setInicio(null);
-                    a.setFim(null);
+        this.vertices.remove(vertice);
+        ArrayList<Aresta> ai = this.arestasIncidentes(vertice);
+        for(Aresta a : ai) {
+            this.arestas.remove(a);
+            a.setCusto(null);
+            a.setInicio(null);
+            a.setFim(null);
+        }
+        int tam = this.vertices.size();
+        Object novaMatriz[][] = new Object[tam][tam];
+        for (int i = 0; i < tam; i++) {
+            for (int j = 0; j < tam; j++) {
+                if (this.ehAdjacente(this.vertices.get(i), this.vertices.get(j))) {
+                    System.out.println(this.vertices.get(i).getElemento() + " "
+                    + this.vertices.get(j).getElemento()
+                    );
+                    novaMatriz[i][j] = this.arestasLigadas(this.vertices.get(i), this.vertices.get(j));
                 }
-                int tam = this.ordem-1;
-                this.matrizAdj = new Object[tam][tam];
-                this.vertices.remove(vertice);
-                vertice.setElemento(null);
-                break;
             }
         }
-        this.ordem--;
+        vertice.setElemento(null);
+        this.matrizAdj = novaMatriz;
+        ordem--;
         return elemento;
     }
 
