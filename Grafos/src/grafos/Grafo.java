@@ -151,6 +151,14 @@ public class Grafo implements GrafoInterface {
         Object custo = aresta.getCusto();
         for (Aresta a : this.arestas) {
             if (a == aresta) {
+                Vertice inicio = a.getInicio();
+                int indiceInicio = this.vertices.indexOf(inicio);
+                Vertice fim = a.getFim();
+                int indiceFim = this.vertices.indexOf(fim);
+                ArrayList<Aresta> arestas1 = (ArrayList<Aresta>) this.matrizAdj[indiceInicio][indiceFim];
+                ArrayList<Aresta> arestas2 = (ArrayList<Aresta>) this.matrizAdj[indiceFim][indiceInicio];
+                arestas1.remove(a);
+                arestas2.remove(a);
                 this.arestas.remove(aresta);
                 aresta.setFim(null);
                 aresta.setInicio(null);
@@ -177,9 +185,6 @@ public class Grafo implements GrafoInterface {
         for (int i = 0; i < tam; i++) {
             for (int j = 0; j < tam; j++) {
                 if (this.ehAdjacente(this.vertices.get(i), this.vertices.get(j))) {
-                    System.out.println(this.vertices.get(i).getElemento() + " "
-                    + this.vertices.get(j).getElemento()
-                    );
                     novaMatriz[i][j] = this.arestasLigadas(this.vertices.get(i), this.vertices.get(j));
                 }
             }

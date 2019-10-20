@@ -12,13 +12,17 @@ public class MainGrafo {
         Vertice v5 = grafo.inserirVertice(5);
         System.out.println(grafo.getOrdem());
         System.out.println(grafo.mostrarMatriz());
-        grafo.inserirAresta(v1, v2, 10);
+        Aresta a = grafo.inserirAresta(v1, v2, 10);
         grafo.inserirAresta(v1, v3, 20);
         grafo.inserirAresta(v2, v4, 25);
         grafo.inserirAresta(v3, v4, 30);
         grafo.inserirAresta(v4, v5, 40);
         System.out.println(grafo.mostrarMatriz());
         grafo.removeVertice(v5);
+        System.out.println(grafo.mostrarMatriz());
+        System.out.println(grafo.arestas());
+        grafo.removeAresta(a);
+        System.out.println(grafo.arestas());
         System.out.println(grafo.mostrarMatriz());
 
 
