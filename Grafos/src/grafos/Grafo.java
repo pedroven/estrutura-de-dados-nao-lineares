@@ -91,6 +91,14 @@ public class Grafo implements GrafoInterface {
     @Override
     public Aresta inserirAresta(Vertice inicio, Vertice fim, Object custo) {
         Aresta novo = new Aresta(inicio, fim, false, custo);
+        
+        ArrayList<Vertice> v_adj = inicio.getAdjacentes();
+        v_adj.add(fim);
+        inicio.setAdjacentes(v_adj);
+        ArrayList<Vertice> v_adj2 = fim.getAdjacentes();
+        v_adj2.add(inicio);
+        fim.setAdjacentes(v_adj2);
+
         this.arestas.add(novo);
         this.vertices.indexOf(inicio);
         ArrayList<Aresta> arestasMtr1 = (ArrayList<Aresta>) this.matrizAdj[this.vertices.indexOf(inicio)][this.vertices.indexOf(fim)];
@@ -112,7 +120,21 @@ public class Grafo implements GrafoInterface {
     @Override
     public Aresta inserirArestaDirecionada(Vertice inicio, Vertice fim, Object custo) {
         Aresta novo = new Aresta(inicio, fim, true);
+
+        ArrayList<Vertice> v_adj = inicio.getAdjacentes();
+        v_adj.add(fim);
+        inicio.setAdjacentes(v_adj);
+        
         this.arestas.add(novo);
+        this.vertices.indexOf(inicio);
+        ArrayList<Aresta> arestasMtr1 = (ArrayList<Aresta>) this.matrizAdj[this.vertices.indexOf(inicio)][this.vertices.indexOf(fim)];
+        if (arestasMtr1 == null) {
+            arestasMtr1 = new ArrayList<Aresta>();
+            arestasMtr1.add(novo);
+            this.matrizAdj[this.vertices.indexOf(inicio)][this.vertices.indexOf(fim)] = arestasMtr1;
+        } else {
+            arestasMtr1.add(novo);
+        }
         return novo;      
     }
 
@@ -127,6 +149,7 @@ public class Grafo implements GrafoInterface {
         Vertice novo = new Vertice(elemento);
         this.vertices.add(novo);
         this.ordem++;
+
         return novo;
     }
 
