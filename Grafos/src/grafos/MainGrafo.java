@@ -10,6 +10,36 @@ public class MainGrafo {
     private static Stack<Object> pilha = new Stack<>();
     private static ConcurrentLinkedQueue<Object> fila = new ConcurrentLinkedQueue<>();
 
+
+    public void dijkstra(Grafo grafo) {
+        Object[][] td = new Object[grafo.getOrdem()][3];
+        for (int j = 0; j < grafo.getOrdem(); j++) {
+            td[j][0] = grafo.vertices().get(j);
+        }
+        ArrayList<Vertice> visitados = new ArrayList<>();
+        ArrayList<Vertice> naoVisitados = grafo.vertices();
+        boolean pv = true;
+        Vertice atual = null;
+        while (visitados.size() != naoVisitados.size()) {
+            if (pv) {
+                atual = grafo.vertices().get(0);
+                td[0][1] = 0;
+            }
+            for (Vertice v : atual.getAdjacentes()) {
+                Aresta aresta = grafo.arestaCorrespondente(atual, v);
+                int indexAtual = grafo.vertices().indexOf(atual);
+                int soma = (Integer)td[indexAtual][1] + (Integer)aresta.getCusto();
+                if (soma < (Integer)td[indexAtual][1]) {
+                    int indexV = grafo.vertices().indexOf(v);
+                    td[indexV][1] = soma;
+                }
+            }
+            visitados.add(atual);
+            naoVisitados.remove(atual);
+            
+        }
+    }
+
     // dfs
     public static void dfs(Vertice inicio) {
         pilha.push(inicio);

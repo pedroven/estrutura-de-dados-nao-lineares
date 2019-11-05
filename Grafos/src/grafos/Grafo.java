@@ -25,6 +25,15 @@ public class Grafo implements GrafoInterface {
         return this.ordem;
     }
 
+    public Aresta arestaCorrespondente(Vertice vertice1, Vertice vertice2) {
+        for (Aresta a : this.arestas) {
+            if (a.getInicio() == vertice1 && a.getFim() == vertice2) {
+                return a;
+            }
+        }
+        return null;
+    } 
+
     @Override
     public boolean ehAdjacente(Vertice vertice1, Vertice vertice2) {
         boolean ehAdj = false;
