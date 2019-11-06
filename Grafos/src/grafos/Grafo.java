@@ -27,7 +27,8 @@ public class Grafo implements GrafoInterface {
 
     public Aresta arestaCorrespondente(Vertice vertice1, Vertice vertice2) {
         for (Aresta a : this.arestas) {
-            if (a.getInicio() == vertice1 && a.getFim() == vertice2) {
+            if ((a.getInicio() == vertice1 && a.getFim() == vertice2) 
+             || (a.getFim() == vertice1 && a.getInicio() == vertice2)) {
                 return a;
             }
         }
