@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import grafos.exceptions.NaoIncidenteException;
 
-public class Grafo implements GrafoInterface {
+public class Grafo implements GrafoInterface, Cloneable {
 
     private int ordem; //numero de vertices
     //adjacencia == par de vertice que compartilha uma aresta OU par de aresta que compartilha um vertice
@@ -247,6 +247,23 @@ public class Grafo implements GrafoInterface {
             m += "\n";
         }
         return m;
+    }
+
+    public boolean ehIsolado(Vertice vertice) {
+        return (vertice.getAdjacentes().size() == 0) ? true : false;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); 
+    }
+
+    public void recolocarArestas(ArrayList<Aresta> arestas) {
+        for(Aresta a : arestas) {
+            Vertice inicio = a.getInicio();
+            Vertice fim = a.getFim();
+            this.inserirAresta(inicio, fim, a.getCusto());
+        }
     }
 
     

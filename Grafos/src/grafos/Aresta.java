@@ -1,6 +1,6 @@
 package grafos;
 
-public class Aresta {
+public class Aresta implements Cloneable {
 
     private Vertice inicio;
     private Vertice fim;
@@ -50,6 +50,11 @@ public class Aresta {
 
     public Object getCusto() {
         return this.custo;
+    }
+    
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); 
     }
 
 }
